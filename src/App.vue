@@ -1,21 +1,13 @@
 <template>
   <div>
-    <h1>黑马头条</h1>
-    <span class="toutiao toutiao-dianzan2"></span>
-
-    <van-button type="primary">主要按钮</van-button>
-    <van-button type="info">信息按钮</van-button>
-    <van-button type="default">默认按钮</van-button>
-    <van-button type="warning">警告按钮</van-button>
-    <van-button type="danger">危险按钮</van-button>
-
-    <div class="login"></div>
-
-    <div style="background: gold; height: 200px"></div>
+    <!-- 一级路由的出口 -->
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
+// 1.下载axios
+// 2. axios 默认配置
 export default {
   data () {
     return {}
@@ -23,11 +15,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.login {
-  width: 694px;
-  height: 88px;
-  background-color: #6db4fb;
-  border-radius: 10px;
-}
-</style>
+<style scoped></style>
