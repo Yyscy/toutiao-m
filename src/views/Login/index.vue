@@ -10,14 +10,12 @@
     <!-- 手机号/验证码表单 -->
     <!--  <van-field></van-field> : 输入框 包括各种type类型的输入,text,password.. textarea -->
     <!-- form里input 必须给name, 用于标识 -->
-    <van-form class="form" @submit="login">
+    <van-form ref="form" class="form" @submit="login">
       <van-field
         v-model="mobile"
         name="mobile"
         placeholder="请输入手机号"
-        :rules="[
-          { required: true, message: '请输入手机号', trigger: 'onChange' }
-        ]"
+        :rules="Mobiles"
       >
         <template #label>
           <span class="toutiao toutiao-shouji"></span>
@@ -28,7 +26,7 @@
         type="text"
         name="code"
         placeholder="请输入验证码"
-        :rules="[{ required: true, message: '请输入验证码' }]"
+        :rules="seccode"
       >
         <!-- 左侧字体图标 -->
         <template #label>
@@ -37,7 +35,19 @@
 
         <!-- 右侧验证码图标 -->
         <template #right-icon>
-          <van-button class="code-btn" size="mini" round>发送验证码</van-button>
+          <van-count-down
+            v-if="isShowCountDown"
+            :time="3 * 1000"
+            format="ss"
+            @finish="isShowCountDown = false"
+          />
+          <van-button
+            class="code-btn"
+            size="mini"
+            round
+            @click.prevent="sendCode"
+            >发送验证码</van-button
+          >
         </template>
       </van-field>
 
@@ -52,13 +62,18 @@
 
 <script>
 // 引入api
-import { login } from '@/api/user'
+import { login, sendCode } from '@/api/user'
+// 校验
+import { Mobiles, seccode } from './rules'
 export default {
   name: 'Login',
   data () {
     return {
-      mobile: '',
-      code: ''
+      mobile: '13811111111',
+      code: '246810',
+      Mobiles,
+      seccode,
+      isShowCountDown: false
     }
   },
   methods: {
@@ -68,8 +83,49 @@ export default {
     },
     // 登录
     async login () {
-      const res = await login(this.mobile, this.code)
-      console.log(res)
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true
+      })
+
+      try {
+        const res = await login(this.mobile, this.code)
+        console.log(res)
+        this.$toast.success('登录成功')
+        this.$store.commit('setUser', res.data.data)
+      } catch (err) {
+        const status = err.response.status
+        let message = '登录失败，请刷新'
+        if (status === 400) {
+          message = err.response.data.message
+        }
+        this.$toast.fail(message)
+        // switch (status) {
+        //   case 400:
+        //     this.$toast.fail(err.response.data.message)
+        //     break
+        //   case 507:
+        //     this.$toast.fail('登录失败，请刷新')
+        //     break
+
+        //   default:
+        //     this.$toast.fail('登录失败，请刷新')
+        //     break
+        // }
+      }
+    },
+    async sendCode () {
+      try {
+        await this.$refs.form.validate('mobile')
+        this.isShowCountDown = true
+        await sendCode(this.mobile)
+      } catch (err) {
+        if (!err.response) {
+          this.$toast.fail('手机号非法！')
+        } else {
+          this.$toast.fail(err.response.data.message)
+        }
+      }
     }
   }
 }

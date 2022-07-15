@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 //  - 需要哪个页面, 再去请求那个页面
 const routes = [
   {
-    path: '/login',
+    path: '',
     component: () => import('@/views/Login')
   }
 ]
