@@ -62,14 +62,14 @@
 
 <script>
 // 引入api
-import { login, sendCode } from '@/api/user'
+import { login, sendCode } from '@/api'
 // 校验
 import { Mobiles, seccode } from './rules'
 export default {
   name: 'Login',
   data () {
     return {
-      mobile: '13811111111',
+      mobile: '13911111111',
       code: '246810',
       Mobiles,
       seccode,
@@ -90,9 +90,10 @@ export default {
 
       try {
         const res = await login(this.mobile, this.code)
-        console.log(res)
+        // console.log(res)
         this.$toast.success('登录成功')
         this.$store.commit('setUser', res.data.data)
+        this.$router.push('/')
       } catch (err) {
         const status = err.response.status
         let message = '登录失败，请刷新'

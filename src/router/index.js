@@ -6,7 +6,30 @@ Vue.use(VueRouter)
 //  - 需要哪个页面, 再去请求那个页面
 const routes = [
   {
-    path: '',
+    path: '/',
+    component: () => import('@/views/layout'),
+    redirect: '/My',
+    children: [
+      {
+        path: '/Home',
+        component: () => import('@/views/Home')
+      },
+      {
+        path: '/My',
+        component: () => import('@/views/My')
+      },
+      {
+        path: '/QA',
+        component: () => import('@/views/QA')
+      },
+      {
+        path: '/Video',
+        component: () => import('@/views/Video')
+      }
+    ]
+  },
+  {
+    path: '/Login',
     component: () => import('@/views/Login')
   }
 ]
