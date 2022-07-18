@@ -9,8 +9,9 @@ import '@/assets/fonts/iconfont.css'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 
-// 引入flexble
+// 引入flexbl
 import 'amfe-flexible/index.min.js'
+
 Vue.config.productionTip = false
 
 Vue.use(Vant)

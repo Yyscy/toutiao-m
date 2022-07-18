@@ -15,19 +15,22 @@
       >
         <Articlelist :id="itam.id"></Articlelist>
       </van-tab>
-      <samp class="toutiao toutiao-gengduo"></samp>
+      <samp class="toutiao toutiao-gengduo" @click="popup"></samp>
+      <EditChannelPopup ref="popup" :list="MyChannel"></EditChannelPopup>
     </van-tabs>
   </div>
 </template>
 
 <script>
+import EditChannelPopup from './component/EditChannelPopup.vue'
 import { gitMyChannel } from '@/api'
 import Articlelist from './component/Articlelist.vue'
 export default {
   data () {
     return {
       activeName: '',
-      MyChannel: ''
+      MyChannel: [],
+      show: false
     }
   },
   created () {
@@ -45,6 +48,9 @@ export default {
         // console.log(err)
         this.$toast('获取数据失败')
       }
+    },
+    popup () {
+      this.$refs.popup.show = !this.$refs.popup.show
     }
   },
   computed: {
@@ -53,12 +59,34 @@ export default {
     }
   },
   components: {
-    Articlelist
+    Articlelist,
+    EditChannelPopup
   }
 }
 </script>
 
 <style lang="less" scoped>
+// 头部固定的样式
+.navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+}
+:deep(.van-tabs__wrap) {
+  position: sticky;
+  top: 92px;
+  left: 0;
+  z-index: 99;
+}
+.toutiao-gengduo {
+  position: fixed;
+  top: 92px;
+}
+
+:deep(.van-tabs__content) {
+  max-height: calc(100vh - 92px - 82px - 100px);
+  overflow: auto;
+}
 .navbar {
   background-color: #3296fa;
   color: #fff;
@@ -110,6 +138,7 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+  z-index: 99;
   width: 66px;
   height: 82px;
   font-size: 40px;

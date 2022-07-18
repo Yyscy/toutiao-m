@@ -5,3 +5,10 @@ export const gitMyChannel = () => {
     url: '/v1_0/user/channels'
   })
 }
+
+// 所有频道列表
+export const gitAllChannels = () => {
+  return request({
+    url: '/v1_0/channels'
+  })
+}
