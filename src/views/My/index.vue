@@ -43,9 +43,7 @@
         <div class="notLogin-img">
           <img src="~@/assets/images/mobile.png" alt="" />
         </div>
-        <div class="notLogin-text" @click="$router.push('/Login')">
-          登录 / 注册
-        </div>
+        <div class="notLogin-text" @click="register">登录 / 注册</div>
       </div>
     </header>
     <main>
@@ -75,7 +73,7 @@
 </template>
 
 <script>
-import { myMessage, Fanlist, watchlist } from '@/api'
+import { myMessage, Fanlist, watchlist, setLocalchannel } from '@/api'
 export default {
   data () {
     return {
@@ -91,6 +89,12 @@ export default {
     }
   },
   methods: {
+    // 登录
+    register () {
+      setLocalchannel([])
+      this.$router.push('/Login')
+    },
+    // 退出
     logout () {
       this.$dialog
         .confirm({
@@ -98,6 +102,7 @@ export default {
           message: '确认退出？'
         })
         .then(() => {
+          setLocalchannel([])
           console.log(this.$store)
           this.$store.commit('setUser', {})
         })

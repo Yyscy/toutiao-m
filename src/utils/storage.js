@@ -17,6 +17,7 @@ class Storage {
 
   remove (key) {
     localStorage.removeItem(key)
+    console.log(11)
   }
 }
 const storage = new Storage()

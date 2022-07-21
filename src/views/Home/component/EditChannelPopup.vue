@@ -10,12 +10,25 @@
     <div class="popupMain">
       <div class="my-channel">
         <van-cell title="我的频道">
-          <van-button size="small" round class="edit-btn">编辑</van-button>
+          <van-button
+            size="small"
+            round
+            class="edit-btn"
+            @click="judge = !judge"
+            >{{ judge ? '完成' : '编辑' }}</van-button
+          >
         </van-cell>
         <!-- 我的频道 -->
         <van-grid :badge="false" gutter="10px">
-          <van-grid-item v-for="itan in list" :key="itan.id" :text="itan.name"
-            ><template #icon> <van-icon name="cross" /></template>
+          <van-grid-item
+            v-for="(itan, index) in list"
+            :key="itan.id"
+            :text="itan.name"
+            :class="{ aabbcc: itan.name == '推荐' }"
+            @click="Deletethechannel(itan, index)"
+            ><template #icon>
+              <van-icon name="cross" v-show="judge && itan.name !== '推荐'"
+            /></template>
           </van-grid-item>
         </van-grid>
       </div>
@@ -30,6 +43,7 @@
             :key="itan.id"
             icon="plus"
             :text="itan.name"
+            @click="addChannel(itan)"
           />
         </van-grid>
       </div>
@@ -49,7 +63,8 @@ export default {
   data () {
     return {
       show: false,
-      allChannels: []
+      allChannels: [],
+      judge: false
     }
   },
   created () {
@@ -59,7 +74,20 @@ export default {
     async gitAllChannels () {
       const { data } = await gitAllChannels()
       this.allChannels = data.data.channels
-      console.log(data)
+      // console.log(data)
+    },
+    // 删除频道
+    Deletethechannel (item, index) {
+      if (this.judge && item.name !== '推荐') {
+        return this.$emit('delChannel', item.id)
+      }
+      if (!this.judge) {
+        this.show = false
+        return this.$emit('switchTo', index)
+      }
+    },
+    addChannel (itan) {
+      this.$emit('addChannel', { ...itan })
     }
   },
   computed: {
@@ -73,6 +101,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+:deep(.aabbcc) {
+  color: red;
+}
+:deep(.van-grid-item__text) {
+  color: unset;
+}
 .popupMain {
   padding-top: 100px;
   .edit-btn {

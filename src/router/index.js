@@ -29,6 +29,10 @@ const routes = [
     ]
   },
   {
+    path: '/search',
+    component: () => import('@/views/Search')
+  },
+  {
     path: '/Login',
     component: () => import('@/views/Login')
   }

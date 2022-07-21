@@ -53,7 +53,7 @@ export default {
         const { data } = await gitArticleList(this.id, +new Date())
         this.preTimestamp = data.data.pre_timestamp
         this.articles = data.data.results
-        console.log(data)
+        // console.log(data)
       } catch (error) {
         const status = error.response.status
         if (status === 400) {

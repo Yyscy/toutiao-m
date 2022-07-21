@@ -2,57 +2,160 @@
   <div>
     <van-nav-bar class="navbar">
       <template #title>
-        <van-button round> <van-icon name="search" />搜索</van-button>
+        <van-button round @click="$router.push('/search')">
+          <van-icon name="search" />搜索</van-button
+        >
       </template>
     </van-nav-bar>
 
     <van-tabs v-model="activeName">
       <van-tab
-        v-for="itam in MyChannel"
+        v-for="(itam, index) in MyChannel"
         :key="itam.id"
         :title="itam.name"
-        :name="itam.id"
+        :name="index"
       >
         <Articlelist :id="itam.id"></Articlelist>
       </van-tab>
       <samp class="toutiao toutiao-gengduo" @click="popup"></samp>
-      <EditChannelPopup ref="popup" :list="MyChannel"></EditChannelPopup>
+      <EditChannelPopup
+        ref="popup"
+        :list="MyChannel"
+        @delChannel="delChannel"
+        @switchTo="switchTo"
+        @addChannel="addChannel"
+      ></EditChannelPopup>
     </van-tabs>
   </div>
 </template>
 
 <script>
 import EditChannelPopup from './component/EditChannelPopup.vue'
-import { gitMyChannel } from '@/api'
+import {
+  gitMyChannel,
+  setLocalchannel,
+  getLocalchannel,
+  delMyChannel,
+  addMyChannel
+} from '@/api'
 import Articlelist from './component/Articlelist.vue'
 export default {
   data () {
     return {
-      activeName: '',
-      MyChannel: [],
+      activeName: 0,
+      MyChannel: getLocalchannel() || [],
       show: false
     }
   },
   created () {
-    if (this.isLogin) {
-      this.loadUser()
-    }
+    this.loadUser()
   },
+
   methods: {
     async loadUser () {
-      try {
-        const { data } = await gitMyChannel()
-        this.MyChannel = data.data.channels
-        console.log(data)
-      } catch (err) {
-        // console.log(err)
-        this.$toast('获取数据失败')
+      if (this.MyChannel.length === 0) {
+        try {
+          const { data } = await gitMyChannel()
+          this.MyChannel = data.data.channels
+          setLocalchannel(this.MyChannel)
+          console.log(data)
+        } catch (err) {
+          // console.log(err)
+          this.$toast('获取数据失败')
+        }
       }
     },
     popup () {
       this.$refs.popup.show = !this.$refs.popup.show
+    },
+    // 删除频道
+    async delChannel (id) {
+      this.MyChannel = this.MyChannel.filter((ele) => ele.id !== id)
+      if (this.isLogin) {
+        try {
+          await delMyChannel(id)
+        } catch (e) {
+          return this.$toast.fail('删除用户频道失败')
+        }
+      }
+      setLocalchannel(this.MyChannel)
+
+      this.$toast.success('删除用户频道成功')
+    },
+    // 切换频道
+    switchTo (index) {
+      // console.log(index)
+      this.activeName = index
+    },
+    // 添加频道
+    async addChannel (ele) {
+      this.MyChannel.push(ele)
+      if (this.isLogin) {
+        try {
+          await addMyChannel(ele.id, this.MyChannel.length)
+        } catch (e) {
+          return this.$toast.fail('添加用户频道失败')
+        }
+      }
+      setLocalchannel(this.MyChannel)
+      this.$toast.success('添加用户频道成功')
     }
   },
+  // methods: {
+  //   async loadUser () {
+  //     if (!this.isLogin) {
+  //       const channel = getLocalchannel()
+  //       if (channel) {
+  //         this.channelList = channel
+  //       } else {
+  //         const { data } = await gitMyChannel()
+  //         this.channelList = data.data.channels
+  //       }
+  //     } else {
+  //       const { data } = await gitMyChannel()
+  //       this.channelList = data.data.channels
+  //     }
+  //     // console.log(this.channelList)
+  //   },
+  //   // 删除
+  //   async delChannel (id) {
+  //     this.channelList = this.channelList.filter((ele) => ele.id !== id)
+  //     if (!this.user) {
+  //       setLocalchannel(this.channelList)
+  //       this.$toast('删除成功')
+  //     } else {
+  //       try {
+  //         await delMyChannel(id)
+  //         this.$toast('删除成功')
+  //       } catch (err) {
+  //         this.$toast('删除失败')
+  //       }
+  //     }
+  //   },
+  //   // 切换
+  //   switchTo (index) {
+  //     this.active = index
+  //   },
+  //   // 添加
+  //   async addChannel (ele) {
+  //     this.channelList.push(ele)
+  //     if (!this.user) {
+  //       setLocalchannel(this.channelList)
+  //       this.$toast('添加成功')
+  //     } else {
+  //       try {
+  //         await addMyChannel(ele.id, this.channelList.length)
+  //         this.$toast('添加成功')
+  //       } catch (err) {
+  //         this.$toast('添加失败')
+  //       }
+  //     }
+  //   },
+  //   popup () {
+  //     this.$refs.popup.show = !this.$refs.popup.show
+  //   }
+  // },
+
   computed: {
     isLogin () {
       return !!this.$store.state.user.token
