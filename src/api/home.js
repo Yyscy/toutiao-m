@@ -29,6 +29,9 @@ export const delMyChannel = (target) => {
   })
 }
 
+/*
+ * 设置用户的频道
+ */
 export const addMyChannel = (id, seq) => {
   return request({
     url: '/v1_0/user/channels',

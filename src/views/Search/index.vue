@@ -9,9 +9,15 @@
         @search="onSearch"
         @cancel="onCancel"
         @focus="visibleSearchSuggestion"
+        @blur="onSearch"
       />
     </form>
-    <component :is="componentName" :value="keywwords"></component>
+    <component
+      ref="mychild"
+      :is="componentName"
+      :value="keywwords"
+      @clicksearch="clicksearch"
+    ></component>
   </div>
 </template>
 
@@ -22,22 +28,33 @@ import SearchSuggestion from './components/SearchSuggestion.vue'
 export default {
   data () {
     return {
-      keywwords: '',
-      isShowSearchResults: false,
-      isShowSearch: '',
-      Suggestions: ''
+      keywwords: '', // 搜索框内容
+      isShowSearchResults: false, // 搜索结果组件
+      Suggestions: '' // 搜索意见
     }
   },
   methods: {
-    onSearch () {
-      console.log('正在搜索')
-      this.isShowSearchResults = true
+    loadmore () {
+      this.gitSearchResult(this.keywwords)
+    },
+    async onSearch () {
+      if (this.keywwords.trim()) {
+        console.log('正在搜索')
+        this.isShowSearchResults = true
+        const history = this.$store.state.history
+        history.unshift(this.keywwords)
+        this.$store.commit('setHistory', history) // 添加历史记录
+      }
     },
     onCancel () {
       this.$router.go(-1)
     },
     visibleSearchSuggestion () {
       this.isShowSearchResults = false
+    },
+    clicksearch (value) {
+      this.keywwords = value
+      this.onSearch()
     }
   },
   computed: {

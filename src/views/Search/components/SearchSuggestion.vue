@@ -1,6 +1,10 @@
 <template>
   <div>
-    <van-cell v-for="item in SearchHighlight" :key="item">
+    <van-cell
+      v-for="(item, index) in SearchHighlight"
+      :key="item"
+      @click="clicksearch(Suggestions[index])"
+    >
       <template #icon>
         <van-icon name="search" class="search-icon" />
       </template>
@@ -43,6 +47,12 @@ export default {
         // console.log(err)
         this.$toast('获取数据失败')
       }
+    },
+    clicksearch (value) {
+      this.$emit('clicksearch', value)
+      const history = this.$store.state.history
+      history.unshift(value)
+      this.$store.commit('setHistory', history)
     }
   },
   computed: {

@@ -9,15 +9,13 @@ export const SearchSuggestions = (q) => {
   })
 }
 // 搜索结果
-export const SearchResult = (q) => {
+export const gitSearchResult = (page, q) => {
   return request({
     url: '/v1_0/search',
     params: {
-      query: {
-        page: 1,
-        per_page: 10,
-        q
-      }
+      page,
+      per_page: 15,
+      q
     }
   })
 }
