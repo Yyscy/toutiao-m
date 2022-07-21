@@ -39,11 +39,17 @@ export default {
     },
     async onSearch () {
       if (this.keywwords.trim()) {
-        console.log('正在搜索')
+        // console.log('正在搜索')
         this.isShowSearchResults = true
         const history = this.$store.state.history
-        history.unshift(this.keywwords)
-        this.$store.commit('setHistory', history) // 添加历史记录
+        const judge = history.every((item) => {
+          // 重复不添加
+          return item !== this.keywwords
+        })
+        if (judge) {
+          history.unshift(this.keywwords)
+          this.$store.commit('setHistory', history) // 添加历史记录
+        }
       }
     },
     onCancel () {

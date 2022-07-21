@@ -1,6 +1,7 @@
 <template>
   <div>
     <van-cell
+      @click="redirect"
       v-if="articleitam.cover.type == 0"
       :title="articleitam.title"
       :label="articleDesc"
@@ -46,6 +47,11 @@ export default {
       const art = this.articleitam
       const sss = dayis(art.pubdate).fromNow()
       return `${art.aut_name}  关注：${art.comm_count}    ${sss} `
+    }
+  },
+  methods: {
+    redirect () {
+      console.log(11)
     }
   }
 }

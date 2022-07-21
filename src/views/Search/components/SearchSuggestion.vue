@@ -42,7 +42,7 @@ export default {
       try {
         const { data } = await SearchSuggestions(this.value.trim())
         this.Suggestions = data.data.options.filter(Boolean)
-        console.log(this.Suggestions)
+        // console.log(this.Suggestions)
       } catch (err) {
         // console.log(err)
         this.$toast('获取数据失败')

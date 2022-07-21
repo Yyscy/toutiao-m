@@ -103,7 +103,7 @@ export default {
         })
         .then(() => {
           setLocalchannel([])
-          console.log(this.$store)
+          // console.log(this.$store)
           this.$store.commit('setUser', {})
         })
         .catch(() => {})

@@ -58,7 +58,7 @@ export default {
           const { data } = await gitMyChannel()
           this.MyChannel = data.data.channels
           setLocalchannel(this.MyChannel)
-          console.log(data)
+          // console.log(data)
         } catch (err) {
           // console.log(err)
           this.$toast('获取数据失败')

@@ -9,7 +9,12 @@
         <van-icon name="delete-o" />
       </div>
     </van-cell>
-    <van-cell v-for="(item, index) in history" :key="index" :title="item">
+    <van-cell
+      v-for="(item, index) in history"
+      :key="index"
+      :title="item"
+      @click="Clickonthesearch(item)"
+    >
       <template #default>
         <van-icon v-show="judge" @click="remove(index)" name="cross" />
       </template>
@@ -33,6 +38,9 @@ export default {
     remove (index) {
       this.history.splice(index, 1)
       this.$store.commit('setHistory', this.history)
+    },
+    Clickonthesearch (name) {
+      this.$emit('clicksearch', name)
     }
   }
 }
