@@ -7,6 +7,7 @@
       :label="articleDesc"
     />
     <van-cell
+      @click="redirect"
       v-if="articleitam.cover.type == 1"
       :title="articleitam.title"
       :label="articleDesc"
@@ -16,7 +17,11 @@
         :src="articleitam.cover.images[0]"
       />
     </van-cell>
-    <van-cell v-if="articleitam.cover.type == 3" :title="articleitam.title">
+    <van-cell
+      @click="redirect"
+      v-if="articleitam.cover.type == 3"
+      :title="articleitam.title"
+    >
       <template #label>
         <div>
           <van-image
@@ -46,12 +51,13 @@ export default {
     articleDesc () {
       const art = this.articleitam
       const sss = dayis(art.pubdate).fromNow()
-      return `${art.aut_name}  关注：${art.comm_count}    ${sss} `
+      return `${art.aut_name}   ${art.comm_count}评论  ${sss} `
     }
   },
   methods: {
     redirect () {
-      console.log(11)
+      const id = this.articleitam.art_id
+      this.$router.push({ path: `/article/${id}` })
     }
   }
 }

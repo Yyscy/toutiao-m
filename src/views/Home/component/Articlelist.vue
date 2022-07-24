@@ -38,8 +38,8 @@ export default {
     return {
       articles: [],
       preTimestamp: '',
-      loading: false,
-      finished: false,
+      loading: false, // 加载
+      finished: false, // 完成
       error: false,
       refreshing: false
     }

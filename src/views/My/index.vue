@@ -1,6 +1,7 @@
 <template>
   <div class="my">
     <header>
+      <!-- 登录 -->
       <div v-if="isLogin" class="my-tou enter">
         <van-row></van-row>
         <van-row class="row-2">
@@ -39,6 +40,7 @@
           </van-grid-item>
         </van-grid>
       </div>
+      <!-- 未登录 -->
       <div v-else class="my-tou notLogin">
         <div class="notLogin-img">
           <img src="~@/assets/images/mobile.png" alt="" />
