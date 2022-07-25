@@ -4,39 +4,46 @@
       <!-- 登录 -->
       <div v-if="isLogin" class="my-tou enter">
         <van-row></van-row>
-        <van-row class="row-2">
-          <van-col span="12">
-            <van-row type="flex" align="center" justify="space-around">
+        <van-row class="row-2" type="flex" justify="space-between">
+          <van-col>
+            <van-row type="flex" align="center">
               <van-image
                 round
                 width="1.76rem"
                 height="1.76rem"
                 :src="list.photo"
-              >
-                ></van-image
-              >
+              />
               <span class="enter-text">{{ list.name }}</span>
             </van-row>
           </van-col>
-          <van-col span="11">
+          <van-col>
             <van-row class="code-row" type="flex" align="center" justify="end">
-              <van-button class="code-btn" type="primary">编辑资料</van-button>
+              <van-button class="code-btn" type="primary" @click="Editdata"
+                >编辑资料</van-button
+              >
             </van-row>
           </van-col>
         </van-row>
-
         <van-grid class="grid" :border="false">
           <van-grid-item text="头条">
-            <template #icon>10</template>
+            <template #icon>
+              <span class="gridtext">{{ list.art_count }}</span>
+            </template>
           </van-grid-item>
           <van-grid-item text="粉丝">
-            <template #icon>10</template>
+            <template #icon>
+              <span class="gridtext">{{ list.fans_count }}</span>
+            </template>
           </van-grid-item>
           <van-grid-item text="关注">
-            <template #icon>10</template>
+            <template #icon>
+              <span class="gridtext">{{ list.follow_count }}</span>
+            </template>
           </van-grid-item>
           <van-grid-item text="获赞">
-            <template #icon>10</template>
+            <template #icon>
+              <span class="gridtext">{{ list.like_count }}</span>
+            </template>
           </van-grid-item>
         </van-grid>
       </div>
@@ -49,7 +56,7 @@
       </div>
     </header>
     <main>
-      <div class="xia">
+      <div class="xia main-grid">
         <van-grid :column-num="2" class="grid">
           <van-grid-item text="收藏">
             <template #icon>
@@ -75,13 +82,11 @@
 </template>
 
 <script>
-import { myMessage, Fanlist, watchlist, setLocalchannel } from '@/api'
+import { myMessage } from '@/api'
 export default {
   data () {
     return {
-      list: {}, // 个人信息
-      fans: {}, // 粉丝数据
-      watch: {} // 关注数据
+      list: {} // 个人信息
     }
   },
   created () {
@@ -93,7 +98,6 @@ export default {
   methods: {
     // 登录
     register () {
-      setLocalchannel([])
       this.$router.push('/Login')
     },
     // 退出
@@ -104,11 +108,10 @@ export default {
           message: '确认退出？'
         })
         .then(() => {
-          setLocalchannel([])
-          // console.log(this.$store)
+          console.log(this.$store.state.user)
+          // this.$router.push('/Login')
           this.$store.commit('setUser', {})
         })
-        .catch(() => {})
     },
     async loadUser () {
       try {
@@ -119,27 +122,14 @@ export default {
         // console.log(err)
         this.$toast('获取数据失败')
       }
-      try {
-        const { data } = await Fanlist()
-        this.fans = data.data
-        // console.log(data)
-      } catch (err) {
-        // console.log(err)
-        this.$toast('粉丝数据失败')
-      }
-      try {
-        const { data } = await watchlist()
-        this.watch = data.data
-        // console.log(data)
-      } catch (err) {
-        // console.log(err)
-        this.$toast('粉丝数据失败')
-      }
+    },
+    Editdata () {
+      this.$router.push('/editdata')
     }
   },
   computed: {
     isLogin () {
-      return !!this.$store.state.user.token
+      return this.$store.state.user.token
     }
   }
 }
@@ -147,12 +137,16 @@ export default {
 
 <style lang="less" scoped>
 .my {
-  background-color: #f4f7f9c0;
+  background-color: #f5f7f9;
   height: calc(100vh - 100px);
 }
 .grid {
   :deep(.van-grid-item__content) {
     background-color: unset;
+  }
+  .gridtext {
+    font-size: 0.34667rem;
+    display: block;
   }
 }
 .xia {
@@ -161,8 +155,9 @@ export default {
 header {
   .my-tou {
     width: 100%;
-    height: 5rem;
-    background-color: #3296fa;
+    height: 400px;
+    background: url('@/assets/images/banner.png') no-repeat;
+    background-size: cover;
   }
   .enter {
     display: flex;
@@ -171,12 +166,9 @@ header {
       flex: 1;
     }
     .row-2 {
+      padding: 0 0.42667rem;
       .van-col {
         height: 100%;
-      }
-      .enter-text {
-        color: #fff;
-        font-size: 14px;
       }
       .code-row {
         height: 100%;
@@ -189,6 +181,12 @@ header {
         font-size: 0.26667rem;
         color: #666;
         padding: 0;
+      }
+
+      .enter-text {
+        font-size: 0.4rem;
+        color: #fff;
+        padding-left: 0.29333rem;
       }
     }
 
@@ -235,6 +233,9 @@ main {
         color: #ed5253;
       }
     }
+  }
+  .main-grid {
+    background-color: #fff;
   }
 }
 .login-ban {

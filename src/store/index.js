@@ -6,7 +6,7 @@ const token = 'TOKEN'
 const History = 'HISTORY'
 export default new Vuex.Store({
   state: {
-    user: getToken(token) || [],
+    user: getToken(token) || {},
     history: getToken(History) || []
   },
 

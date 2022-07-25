@@ -93,6 +93,7 @@ export default {
         // console.log(res)
         this.$toast.success('登录成功')
         this.$store.commit('setUser', res.data.data)
+        console.log(res.data.data)
         this.$router.push('/')
       } catch (err) {
         const status = err.response.status

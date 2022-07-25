@@ -25,8 +25,8 @@
       <template #label>
         <div>
           <van-image
-            v-for="imgs in articleitam.cover.images"
-            :key="imgs"
+            v-for="(imgs, index) in articleitam.cover.images"
+            :key="index"
             width="3rem"
             height="2rem"
             :src="imgs"
